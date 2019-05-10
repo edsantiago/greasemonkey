@@ -4,7 +4,8 @@
 // @downloadURL https://raw.githubusercontent.com/edsantiago/greasemonkey/master/podman-ginkgo-highlight/podman-ginkgo-highlight.user.js
 // @description highlight different-level messages in podman ginkgo logs
 // @include     /.*/aos-ci/.*/containers/libpod/.*/output.log/
-// @version     0.01
+// @include     /.*cirrus-ci.com/.*task.*/
+// @version     0.02
 // @grant       none
 // ==/UserScript==
 
@@ -52,8 +53,15 @@ function htmlify() {
 
         for (var j=0; j < lines.length; j++) {
             var line = lines[j];
+            var ts = '';                  // timestamp
+            var ts_found = line.match(/^(\[\+\d+s\] )(.*)/);
+            if (ts_found) {
+                ts = ts_found[1];
+                line = ts_found[2];
+            }
 
-            if (line.match(/^. Failure \[/)) {
+            // WEIRD: sometimes there are UTF-8 binary chars here
+            if (line.match(/^.{0,3} Failure \[/)) {
                 // Begins a block of multiple lines including a stack trace
                 lines_out += "<div class='log-error'>\n";
                 in_failure = 1;
@@ -87,7 +95,7 @@ function htmlify() {
                 line = end_fail[1] + "<a href='#t--" + end_fail[2].trim().replace(/ /g, '-') + "'>" + end_fail[2] + "</a>";
             }
 
-            lines_out += line + "\n";
+            lines_out += ts + line + "\n";
         }
 
         pre.innerHTML = lines_out;
