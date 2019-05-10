@@ -5,9 +5,19 @@
 // @description highlight different-level messages in podman ginkgo logs
 // @include     /.*/aos-ci/.*/containers/libpod/.*/output.log/
 // @include     /.*cirrus-ci.com/.*task.*/
-// @version     0.02
+// @version     0.03
 // @grant       none
 // ==/UserScript==
+
+/*
+** Changelog:
+**
+**  2019-05-10  0.03  scroll to bottom of page on load
+**
+**  2019-05-10  0.02  handle new timestamp format
+**
+**  2019-03-20  0.01  initial revision
+*/
 
 /*
 ** Add a set of styles for different log levels and parts of each log.
@@ -100,6 +110,8 @@ function htmlify() {
 
         pre.innerHTML = lines_out;
     }
+
+    window.scrollTo(0, document.body.scrollHeight);
 }
 
 window.addEventListener("load", htmlify, false);
