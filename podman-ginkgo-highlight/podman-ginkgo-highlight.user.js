@@ -53,6 +53,8 @@ function htmlify() {
     var in_failure = 0;
     var after_divider = 0;
 
+    var git_commit;
+
     // There's probably only one <pre> in the document, but allow more
     var pres = document.getElementsByTagName("pre")
     for (var i=0; i < pres.length; i++) {
@@ -63,11 +65,26 @@ function htmlify() {
 
         for (var j=0; j < lines.length; j++) {
             var line = lines[j];
+
+            // Strip off leading timestamp
             var ts = '';                  // timestamp
             var ts_found = line.match(/^(\[\+\d+s\] )(.*)/);
             if (ts_found) {
                 ts = ts_found[1];
                 line = ts_found[2];
+            }
+
+            // Identify the git commit we're working with
+            var git_commit_match = line.match(/libpod.gitCommit=([0-9a-f]+)/);
+            if (git_commit_match) {
+                git_commit = git_commit_match[1];
+            }
+            // ...so we can link to particular lines in source files
+            if (git_commit) {
+                //                    1  12  3                  34     4 5   526  6
+                line = line.replace(/^(.*)(\/(containers\/libpod)(\/\S+):(\d+))(.*)$/,
+                                    "$1<a href='https://github.com/$3/blob/" +
+                                    git_commit + "$4#L$5'>$2</a>$6");
             }
 
             // WEIRD: sometimes there are UTF-8 binary chars here
