@@ -5,12 +5,14 @@
 // @description highlight different-level messages in podman ginkgo logs
 // @include     /.*/aos-ci/.*/containers/libpod/.*/output.log/
 // @include     /.*cirrus-ci.com/.*task.*/
-// @version     0.03
+// @version     0.04
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
+**
+**  2019-05-10  0.04  if we see /containers/libpod/foo:NN, link to it
 **
 **  2019-05-10  0.03  scroll to bottom of page on load
 **
