@@ -5,12 +5,14 @@
 // @description highlight different-level messages in podman ginkgo logs
 // @include     /.*/aos-ci/.*/containers/libpod/.*/output.log/
 // @include     /.*cirrus-ci.com/.*task.*/
-// @version     0.05
+// @version     0.06
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
+**
+**  2019-06-11  0.06  slightly better higlights
 **
 **  2019-06-11  0.05  highlight useful parts of executed podman commands
 **
@@ -32,6 +34,7 @@ function add_css() {
     var style = document.createElement('style');
     style.type = 'text/css';
     style.innerHTML = `
+.boring    { color: #999; }
 .timestamp { color: #999; }
 .log-debug { color: #999; }
 .log-info  { color: #333; }
@@ -107,8 +110,8 @@ function htmlify() {
             }
             else if (line.match(/^Running:/)) {
                 // Highlight the important (non-boilerplate) podman command
-                line = line.replace(/\/podman((\s+--(root|runroot|runtime|tmpdir|storage-opt|conmon|cgroup-manager|cni-config-dir|storage-driver) \S+)*)(.*)/,
-                                    "/<b>podman</b>$1<b>$4</b>");
+                line = line.replace(/(\S+\/podman)((\s+--(root|runroot|runtime|tmpdir|storage-opt|conmon|cgroup-manager|cni-config-dir|storage-driver) \S+)*)(.*)/,
+                                    "<span title=\"$1\"><b>podman</b></span> <span class=\"boring\" title=\"$2\">[options]</span><b>$5</b>");
             }
             else if (line.match(/^Error:/)) {
                 line = "<span class='log-warn'>" + line + "</span>";
