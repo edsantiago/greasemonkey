@@ -5,12 +5,14 @@
 // @description highlight different-level messages in podman ginkgo logs
 // @include     /.*/aos-ci/.*/containers/libpod/.*/output.log/
 // @include     /.*cirrus-ci.com/.*task.*/
-// @version     0.04
+// @version     0.05
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
+**
+**  2019-06-11  0.05  highlight useful parts of executed podman commands
 **
 **  2019-05-10  0.04  if we see /containers/libpod/foo:NN, link to it
 **
@@ -102,6 +104,11 @@ function htmlify() {
                     lines_out += "</div>\n";
                 }
                 after_divider = 0;
+            }
+            else if (line.match(/^Running:/)) {
+                // Highlight the important (non-boilerplate) podman command
+                line = line.replace(/\/podman((\s+--(root|runroot|runtime|tmpdir|storage-opt|conmon|cgroup-manager|cni-config-dir|storage-driver) \S+)*)(.*)/,
+                                    "/<b>podman</b>$1<b>$4</b>");
             }
             else if (line.match(/^Error:/)) {
                 line = "<span class='log-warn'>" + line + "</span>";
