@@ -5,12 +5,14 @@
 // @description highlight different-level messages in podman ginkgo logs
 // @include     /.*/aos-ci/.*/containers/libpod/.*/output.log/
 // @include     /.*cirrus-ci.com/.*task.*/
-// @version     0.07
+// @version     0.08
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
+**
+**  2019-06-12  0.08  handle 'Panic'; handle non-Podman test names
 **
 **  2019-06-12  0.07  display headings inline; deemphasize source code links;
 **                    handle 'BeforeEach' failures.
@@ -106,7 +108,7 @@ function htmlify() {
             }
 
             // WEIRD: sometimes there are UTF-8 binary chars here
-            if (line.match(/^.{0,3} Failure( in .*)? \[/)) {
+            if (line.match(/^.{0,4} (Failure|Panic)( in .*)? \[/)) {
                 // Begins a block of multiple lines including a stack trace
                 lines_out += "<div class='log-error'>\n";
                 in_failure = 1;
@@ -131,7 +133,9 @@ function htmlify() {
             // Two lines after each divider, there's a test name. Make it
             // an anchor so we can link to it later.
             if (after_divider++ == 2) {
-                if (line.match(/^  [Pp]odman /)) {
+                // Sigh. There is no actual marker. Assume that anything with
+                // two leading spaces then alpha (not slashes) is a test name.
+                if (line.match(/^  [a-zA-Z]/)) {
                     var id = line.trim().replace(/[^a-zA-Z0-9_-]/g, '-');
                     line = "<a name='t--" + id + "'><h2>" + line + "</h2></a>"
                 }
@@ -140,9 +144,9 @@ function htmlify() {
             // Failure name corresponds to a previously-seen block.
             // FIXME: sometimes there are three failures with the same name.
             //        ...I have no idea why or how to link to the right ones.
-            var end_fail = line.match(/^(\[Fail\] .* \[(It|BeforeEach)\] )([Pp]odman.*)/);
+            var end_fail = line.match(/^(\[(Fail|Panic!)\] .* \[(It|BeforeEach)\] )([A-Za-z].*)/);
             if (end_fail) {
-                line = end_fail[1] + "<a href='#t--" + end_fail[3].trim().replace(/[^a-zA-Z0-9_-]/g, '-') + "'>" + end_fail[3] + "</a>";
+                line = "<b>" + end_fail[1] + "<a href='#t--" + end_fail[4].trim().replace(/[^a-zA-Z0-9_-]/g, '-') + "'>" + end_fail[4] + "</a></b>";
             }
 
             lines_out += ts + line + "\n";
