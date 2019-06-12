@@ -5,12 +5,14 @@
 // @description highlight different-level messages in podman ginkgo logs
 // @include     /.*/aos-ci/.*/containers/libpod/.*/output.log/
 // @include     /.*cirrus-ci.com/.*task.*/
-// @version     0.08
+// @version     0.09
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
+**
+**  2019-06-12  0.09  remove duplicate lines; deemphasize timestamp
 **
 **  2019-06-12  0.08  handle 'Panic'; handle non-Podman test names
 **
@@ -80,6 +82,7 @@ function htmlify() {
     for (var i=0; i < pres.length; i++) {
         var pre = pres[i];
 
+        var current_output = '';         // for removing duplication
         var lines = pre.innerHTML.split('\n');
         var lines_out = '';
 
@@ -125,9 +128,20 @@ function htmlify() {
                 // Highlight the important (non-boilerplate) podman command
                 line = line.replace(/(\S+\/podman)((\s+--(root|runroot|runtime|tmpdir|storage-opt|conmon|cgroup-manager|cni-config-dir|storage-driver) \S+)*)(.*)/,
                                     "<span title=\"$1\"><b>podman</b></span> <span class=\"boring\" title=\"$2\">[options]</span><b>$5</b>");
+
+                current_output = '';
+            }
+            // Grrr. 'output:' usually just tells us what we already know.
+            else if (line.match(/^output:/)) {
+                if (line == 'output: ' + current_output.trim().replace(/\s+/g, ' ') || line == 'output: ') {
+                    continue;
+                }
             }
             else if (line.match(/^Error:/)) {
                 line = "<span class='log-warn'>" + line + "</span>";
+            }
+            else {
+                current_output += ' ' + line;
             }
 
             // Two lines after each divider, there's a test name. Make it
@@ -149,7 +163,7 @@ function htmlify() {
                 line = "<b>" + end_fail[1] + "<a href='#t--" + end_fail[4].trim().replace(/[^a-zA-Z0-9_-]/g, '-') + "'>" + end_fail[4] + "</a></b>";
             }
 
-            lines_out += ts + line + "\n";
+            lines_out += "<span class=\"timestamp\">" + ts + "</span>" + line + "\n";
         }
 
         pre.innerHTML = lines_out;
