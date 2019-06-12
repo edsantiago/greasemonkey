@@ -5,12 +5,15 @@
 // @description highlight different-level messages in podman ginkgo logs
 // @include     /.*/aos-ci/.*/containers/libpod/.*/output.log/
 // @include     /.*cirrus-ci.com/.*task.*/
-// @version     0.06
+// @version     0.07
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
+**
+**  2019-06-12  0.07  display headings inline; deemphasize source code links;
+**                    handle 'BeforeEach' failures.
 **
 **  2019-06-11  0.06  slightly better higlights
 **
@@ -45,6 +48,14 @@ function add_css() {
 .string    { color: #00c; }
 .command   { font-weight: bold; color: #000; }
 .changed   { color: #000; font-weight: bold; }
+
+/* links to source files: not as prominent as links to errors */
+a.codelink:link    { color: #000; }
+a.codelink:visited { color: #666; }
+a.codelink:hover   { background: #000; color: #999; }
+
+/* error titles: display next to timestamp, not on separate line */
+h2 { display: inline; }
 `;
 
     head.appendChild(style);
@@ -90,12 +101,12 @@ function htmlify() {
             if (git_commit) {
                 //                    1  12  3                  34     4 5   526  6
                 line = line.replace(/^(.*)(\/(containers\/libpod)(\/\S+):(\d+))(.*)$/,
-                                    "$1<a href='https://github.com/$3/blob/" +
+                                    "$1<a class=\"codelink\" href='https://github.com/$3/blob/" +
                                     git_commit + "$4#L$5'>$2</a>$6");
             }
 
             // WEIRD: sometimes there are UTF-8 binary chars here
-            if (line.match(/^.{0,3} Failure \[/)) {
+            if (line.match(/^.{0,3} Failure( in .*)? \[/)) {
                 // Begins a block of multiple lines including a stack trace
                 lines_out += "<div class='log-error'>\n";
                 in_failure = 1;
@@ -121,17 +132,17 @@ function htmlify() {
             // an anchor so we can link to it later.
             if (after_divider++ == 2) {
                 if (line.match(/^  [Pp]odman /)) {
-                    var id = line.trim().replace(/ /g, '-');
-                    line = "<a name='t--" + id + "'>" + line + "</a>"
+                    var id = line.trim().replace(/[^a-zA-Z0-9_-]/g, '-');
+                    line = "<a name='t--" + id + "'><h2>" + line + "</h2></a>"
                 }
             }
 
             // Failure name corresponds to a previously-seen block.
             // FIXME: sometimes there are three failures with the same name.
             //        ...I have no idea why or how to link to the right ones.
-            var end_fail = line.match(/^(\[Fail\] .* \[It\] )([Pp]odman.*)/);
+            var end_fail = line.match(/^(\[Fail\] .* \[(It|BeforeEach)\] )([Pp]odman.*)/);
             if (end_fail) {
-                line = end_fail[1] + "<a href='#t--" + end_fail[2].trim().replace(/ /g, '-') + "'>" + end_fail[2] + "</a>";
+                line = end_fail[1] + "<a href='#t--" + end_fail[3].trim().replace(/[^a-zA-Z0-9_-]/g, '-') + "'>" + end_fail[3] + "</a>";
             }
 
             lines_out += ts + line + "\n";
