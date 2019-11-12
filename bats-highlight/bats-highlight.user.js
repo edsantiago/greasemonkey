@@ -6,9 +6,15 @@
 // @description  highlight BATS results
 // @include      /.*/job/ci-openstack-mbs-sti/.*/artifact/.*/test.*\.bats\.log/
 // @include      /.*/artifact/package-tests/logs/FAIL-.*/
-// @version      0.9
+// @version      1.0
 // @grant        none
 // ==/UserScript==
+
+/*
+** Changelog
+**
+** 2019-11-12  1.0   highlight skips
+*/
 
 /*
 ** Add a set of styles for different log levels and parts of each log.
@@ -22,6 +28,7 @@ function add_css() {
 .boring    { color: #999; }
 .ok        { color: #3f3; }
 .notok     { color: #F00; font-weight: bold; }
+.skip      { color: #F90; }
 .log       { color: #900; }
 .log-esm   { color: #b00; font-weight: bold; }
 `;
@@ -49,7 +56,10 @@ function htmlify() {
             var line = lines[j];
             var css = '';
 
-            if (line.match(/^ok /)) {
+            if (line.match(/^ok .* # skip/)) {
+                css = 'skip';
+            }
+            else if (line.match(/^ok /)) {
                 css = 'ok';
             }
             else if (line.match(/^not ok /)) {
