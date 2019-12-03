@@ -6,12 +6,15 @@
 // @description  highlight BATS results
 // @include      /.*/job/ci-openstack-mbs-sti/.*/artifact/.*/test.*\.bats\.log/
 // @include      /.*/artifact/package-tests/logs/FAIL-.*/
-// @version      1.0
+// @include      /.*/baseos-ci/.*/test.*\.bats\.log/
+// @version      1.1
 // @grant        none
 // ==/UserScript==
 
 /*
 ** Changelog
+**
+** 2019-12-03  1.1   new URLs in gating tests
 **
 ** 2019-11-12  1.0   highlight skips
 */
