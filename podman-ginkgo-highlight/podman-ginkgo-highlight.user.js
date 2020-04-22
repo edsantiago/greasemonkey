@@ -12,6 +12,8 @@
 /*
 ** Changelog:
 **
+**  2020-04-22  0.10  handle BATS output as well (for buildah logs)
+**
 **  2019-06-12  0.09  remove duplicate lines; deemphasize timestamp
 **
 **  2019-06-12  0.08  handle 'Panic'; handle non-Podman test names
@@ -53,6 +55,13 @@ function add_css() {
 .command   { font-weight: bold; color: #000; }
 .changed   { color: #000; font-weight: bold; }
 
+/* BATS styles */
+.bats-passed    { color: #393; }
+.bats-failed    { color: #F00; font-weight: bold; }
+.bats-skipped   { color: #F90; }
+.bats-log       { color: #900; }
+.bats-log-esm   { color: #b00; font-weight: bold; }
+
 /* links to source files: not as prominent as links to errors */
 a.codelink:link    { color: #000; }
 a.codelink:visited { color: #666; }
@@ -76,6 +85,7 @@ function htmlify() {
     var after_divider = 0;
 
     var git_commit;
+    var looks_like_bats = 0;
 
     // There's probably only one <pre> in the document, but allow more
     var pres = document.getElementsByTagName("pre")
@@ -108,6 +118,32 @@ function htmlify() {
                 line = line.replace(/^(.*)(\/(containers\/libpod)(\/\S+):(\d+))(.*)$/,
                                     "$1<a class=\"codelink\" href='https://github.com/$3/blob/" +
                                     git_commit + "$4#L$5'>$2</a>$6");
+            }
+
+            // BATS handling (used also for apiv2 tests, which emit TAP output)
+            var bats_found = line.match(/^1\.\.(\d+)$/);
+            if (bats_found || line.match(/\/test-apiv2/)) {
+                looks_like_bats = 1;
+                // FIXME: keep track of count
+            }
+            if (looks_like_bats) {
+                var css = '';
+
+                if      (line.match(/^ok .* # skip/)) { css = 'skipped' }
+                else if (line.match(/^ok /))          { css = 'passed'  }
+                else if (line.match(/^not ok /))      { css = 'failed'  }
+                else if (line.match(/^# #\| /))       { css = 'log-esm' }
+                else if (line.match(/^# /))           { css = "log"     }
+
+                if (css != '') {
+                    line = "<span class='bats-" + css + "'>" + line + "</span>";
+                }
+
+                if (ts) {
+                    lines_out += "<span class=\"timestamp\">" + ts + "</span>"
+                }
+                lines_out += line + "\n"
+                continue
             }
 
             // WEIRD: sometimes there are UTF-8 binary chars here
