@@ -5,7 +5,7 @@
 // @description highlight different-level messages in podman ginkgo logs
 // @include     /.*/aos-ci/.*/containers/libpod/.*/output.log/
 // @include     /.*cirrus-ci.com/.*task.*/
-// @version     0.09
+// @version     0.10
 // @grant       none
 // ==/UserScript==
 
@@ -13,6 +13,7 @@
 ** Changelog:
 **
 **  2020-04-22  0.10  handle BATS output as well (for buildah logs)
+**                    - include a summary line at bottom with pass/fail/skip
 **
 **  2019-06-12  0.09  remove duplicate lines; deemphasize timestamp
 **
@@ -62,6 +63,8 @@ function add_css() {
 .bats-log       { color: #900; }
 .bats-log-esm   { color: #b00; font-weight: bold; }
 
+.bats-summary   { font-size: 150%; }
+
 /* links to source files: not as prominent as links to errors */
 a.codelink:link    { color: #000; }
 a.codelink:visited { color: #666; }
@@ -86,6 +89,7 @@ function htmlify() {
 
     var git_commit;
     var looks_like_bats = 0;
+    var bats_count = { total: 0, passed: 0, failed: 0, skipped: 0 };
 
     // There's probably only one <pre> in the document, but allow more
     var pres = document.getElementsByTagName("pre")
@@ -124,7 +128,9 @@ function htmlify() {
             var bats_found = line.match(/^1\.\.(\d+)$/);
             if (bats_found || line.match(/\/test-apiv2/)) {
                 looks_like_bats = 1;
-                // FIXME: keep track of count
+                if (bats_found) {
+                    bats_count['expected_total'] = bats_found[1]
+                }
             }
             if (looks_like_bats) {
                 var css = '';
@@ -136,6 +142,7 @@ function htmlify() {
                 else if (line.match(/^# /))           { css = "log"     }
 
                 if (css != '') {
+                    bats_count[css]++
                     line = "<span class='bats-" + css + "'>" + line + "</span>";
                 }
 
@@ -200,6 +207,32 @@ function htmlify() {
             }
 
             lines_out += "<span class=\"timestamp\">" + ts + "</span>" + line + "\n";
+        }
+
+        // BATS summary
+        if (looks_like_bats) {
+            lines_out += "<hr/><span class='bats-summary'>Summary:";
+            var total = 0
+            var comma = ''
+
+            const kinds = [ 'passed', 'failed', 'skipped' ]
+            for (const kind of kinds) {
+                var n = bats_count[kind]
+                if (n) {
+                    lines_out += comma + " <span class='bats-" + kind + "'>" + n + " " + kind + "</span>"
+                    total += n
+                    comma = ','
+                }
+            }
+
+            lines_out += ". Total tests: " + total
+
+            if (bats_count['expected_total']) {
+                if (total != bats_count['expected_total']) {
+                    lines_out += " <span class='bats-failed'>(WARNING: expected "+ bats_count['expected_total'] + ")</span>"
+                }
+            }
+            lines_out += "</span>\n"
         }
 
         pre.innerHTML = lines_out;
