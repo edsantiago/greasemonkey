@@ -12,6 +12,8 @@
 /*
 ** Changelog:
 **
+**  2020-05-19  0.11  handle podman-remote command; newline-separate options
+**
 **  2020-04-22  0.10  handle BATS output as well (for buildah logs)
 **                    - include a summary line at bottom with pass/fail/skip
 **
@@ -169,8 +171,18 @@ function htmlify() {
             }
             else if (line.match(/^Running:/)) {
                 // Highlight the important (non-boilerplate) podman command
-                line = line.replace(/(\S+\/podman)((\s+--(root|runroot|runtime|tmpdir|storage-opt|conmon|cgroup-manager|cni-config-dir|storage-driver) \S+)*)(.*)/,
-                                    "<span title=\"$1\"><b>podman</b></span> <span class=\"boring\" title=\"$2\">[options]</span><b>$5</b>");
+                line = line.replace(/(\S+\/podman(-remote)?)((\s+--(root|runroot|runtime|tmpdir|storage-opt|conmon|cgroup-manager|cni-config-dir|storage-driver|remote) \S+)*)(.*)/, function(match, commandpath, remote, options, foo1, foo2, rest) {
+                    var newline = "<span title=\"" + commandpath + "\"><b>podman";
+                    if (remote) {
+                        newline += remote;
+                    }
+                    newline += "</b></span>";
+                    if (options) {
+                        newline += " <span class=\"boring\" title=\"" + options.replace(/ --/g, "\n--") + "\">[options]</span>";
+                    }
+                    newline += "<b>" + rest + "</b>";
+                    return newline;
+                });
 
                 current_output = '';
             }
