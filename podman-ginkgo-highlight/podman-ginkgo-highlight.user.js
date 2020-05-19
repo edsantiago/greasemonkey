@@ -5,7 +5,7 @@
 // @description highlight different-level messages in podman ginkgo logs
 // @include     /.*/aos-ci/.*/containers/libpod/.*/output.log/
 // @include     /.*cirrus-ci.com/.*task.*/
-// @version     0.10
+// @version     0.11
 // @grant       none
 // ==/UserScript==
 
