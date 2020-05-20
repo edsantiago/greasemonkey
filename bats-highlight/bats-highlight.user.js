@@ -7,6 +7,7 @@
 // @include      /.*/job/ci-openstack-mbs-sti/.*/artifact/.*/test.*\.bats\.log/
 // @include      /.*/artifact/package-tests/logs/FAIL-.*/
 // @include      /.*/baseos-ci/.*/test.*\.bats\.log/
+// @include      /.*cirrus-ci.com/.*task.*/logs/.*\.log/
 // @version      1.1
 // @grant        none
 // ==/UserScript==
