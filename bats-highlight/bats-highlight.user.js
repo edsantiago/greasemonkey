@@ -2,18 +2,20 @@
 // @name         bats-highlight
 // @namespace    https://github.com/edsantiago/greasemonkey
 // @downloadURL  https://raw.githubusercontent.com/edsantiago/greasemonkey/master/bats-highlight/bats-highlight.user.js
-
 // @description  highlight BATS results
 // @include      /.*/job/ci-openstack-mbs-sti/.*/artifact/.*/test.*\.bats\.log/
 // @include      /.*/artifact/package-tests/logs/FAIL-.*/
 // @include      /.*/baseos-ci/.*/test.*\.bats\.log/
 // @include      /.*cirrus-ci.com/.*task.*/logs/.*\.log/
-// @version      1.1
+// @include      /.*jenkins-continuous-infra/
+// @version      1.2
 // @grant        none
 // ==/UserScript==
 
 /*
 ** Changelog
+**
+** 2020-05-20  1.2   trigger in jenkins; deemphasize timestamps
 **
 ** 2019-12-03  1.1   new URLs in gating tests
 **
@@ -58,7 +60,15 @@ function htmlify() {
 
         for (var j=0; j < lines.length; j++) {
             var line = lines[j];
+            var ts = '';		// timestamp
             var css = '';
+
+            // Look for leading timestamp; deemphasize it
+            var ts_found = line.match(/^(\[\d+-\d+-\d+T\d+:\d+:[\d.]+Z\]\s+)(.*)/);
+            if (ts_found) {
+                ts = "<span class='boring'>" + ts_found[1] + "</span>";
+                line = ts_found[2];
+            }
 
             if (line.match(/^ok .* # skip/)) {
                 css = 'skip';
@@ -80,7 +90,7 @@ function htmlify() {
                 line = "<span class='" + css + "'>" + line + "</span>";
             }
 
-            lines_out += line + "\n";
+            lines_out += ts + line + "\n";
         }
 
         pre.innerHTML = lines_out;
