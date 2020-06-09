@@ -5,13 +5,14 @@
 // @description highlight different-level messages in podman ginkgo logs
 // @include     /.*/aos-ci/.*/containers/libpod/.*/output.log/
 // @include     /.*cirrus-ci.com/.*task.*/
-// @version     0.12
+// @version     0.13
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
 **
+**  2020-06-09  0.13  handle new /libpod/define.gitCommit= format
 **  2020-06-09  0.12  handle events-backend flag
 **
 **  2020-05-19  0.11  handle podman-remote command; newline-separate options
@@ -116,9 +117,9 @@ function htmlify() {
             }
 
             // Identify the git commit we're working with
-            var git_commit_match = line.match(/libpod.gitCommit=([0-9a-f]+)/);
+            var git_commit_match = line.match(/libpod(\/define)?.gitCommit=([0-9a-f]+)/);
             if (git_commit_match) {
-                git_commit = git_commit_match[1];
+                git_commit = git_commit_match[2];
             }
             // ...so we can link to particular lines in source files
             if (git_commit) {
