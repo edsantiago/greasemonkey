@@ -5,12 +5,14 @@
 // @description highlight different-level messages in podman ginkgo logs
 // @include     /.*/aos-ci/.*/containers/libpod/.*/output.log/
 // @include     /.*cirrus-ci.com/.*task.*/
-// @version     0.13
+// @version     0.14
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
+**
+**  2020-06-11  0.14  ignore "--remote" and "--url"
 **
 **  2020-06-09  0.13  handle new /libpod/define.gitCommit= format
 **  2020-06-09  0.12  handle events-backend flag
@@ -173,8 +175,10 @@ function htmlify() {
                 after_divider = 0;
             }
             else if (line.match(/^Running:/)) {
+                // "--remote" takes no args; just remove it entirely
+                line = line.replace(/\s+--remote\s+/g, ' ');
                 // Highlight the important (non-boilerplate) podman command
-                line = line.replace(/(\S+\/podman(-remote)?)((\s+--(root|runroot|runtime|tmpdir|storage-opt|conmon|cgroup-manager|cni-config-dir|storage-driver|remote|events-backend) \S+)*)(.*)/, function(match, commandpath, remote, options, foo1, foo2, rest) {
+                line = line.replace(/(\S+\/podman(-remote)?)((\s+--(root|runroot|runtime|tmpdir|storage-opt|conmon|cgroup-manager|cni-config-dir|storage-driver|events-backend|url) \S+)*)(.*)/, function(match, commandpath, remote, options, foo1, foo2, rest) {
                     var newline = "<span title=\"" + commandpath + "\"><b>podman";
                     if (remote) {
                         newline += remote;
