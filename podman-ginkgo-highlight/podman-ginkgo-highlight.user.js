@@ -5,12 +5,14 @@
 // @description highlight different-level messages in podman ginkgo logs
 // @include     /.*/aos-ci/.*/containers/libpod/.*/output.log/
 // @include     /.*cirrus-ci.com/.*task.*/
-// @version     0.14
+// @version     0.15
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
+**
+**  2020-06-22  0.15  timestamps: remove same-as-before
 **
 **  2020-06-11  0.14  ignore "--remote" and "--url"
 **
@@ -94,6 +96,7 @@ function htmlify() {
     var in_failure = 0;
     var after_divider = 0;
 
+    var previous_ts = '';
     var git_commit;
     var looks_like_bats = 0;
     var bats_count = { total: 0, passed: 0, failed: 0, skipped: 0 };
@@ -116,6 +119,12 @@ function htmlify() {
             if (ts_found) {
                 ts = ts_found[1];
                 line = ts_found[2];
+                if (ts == previous_ts) {
+                    ts = ' '.repeat(ts.length);
+                }
+                else {
+                    previous_ts = ts;
+                }
             }
 
             // Identify the git commit we're working with
