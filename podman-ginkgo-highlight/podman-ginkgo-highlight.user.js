@@ -5,12 +5,14 @@
 // @description highlight different-level messages in podman ginkgo logs
 // @include     /.*/aos-ci/.*/containers/libpod/.*/output.log/
 // @include     /.*cirrus-ci.com/.*task.*/
-// @version     0.15
+// @version     0.16
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
+**
+**  2020-09-30  0.16  better readability for command lines
 **
 **  2020-06-22  0.15  timestamps: remove same-as-before
 **
@@ -156,6 +158,11 @@ function htmlify() {
                 else if (line.match(/^not ok /))      { css = 'failed'  }
                 else if (line.match(/^# #\| /))       { css = 'log-esm' }
                 else if (line.match(/^# /))           { css = "log"     }
+
+                // Two hashes, or hash-and-dollar, indicate a command.
+                // Strip off the full path for readability; and make entire
+                // line boldface to make it easier to find commands.
+                line = line.replace(/^#\s(#|\$)\s(\/\S+\/(\S+))(.*)/, "# $1 <b><span title=\"$2\">$3</span>$4</b>");
 
                 if (css != '') {
                     bats_count[css]++
