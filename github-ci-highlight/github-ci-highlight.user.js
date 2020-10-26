@@ -26,13 +26,13 @@ function add_css() {
     style.innerHTML = `
 .ci-int       { padding: 2px; background: #960; }
 .ci-sys       { padding: 2px; background: #cf9; }
-.ci-root      { padding: 2px; background: #333; color: #ccc; }
-.ci-fedora    { padding: 2px; background: #294172; color: #3c6eb4; }
-.ci-ubuntu    { padding: 2px; background: #e95420; color: #fff; }
-.ci-rootless  { padding: 2px; background: #ccc; color: #333; }
-.ci-podman    { padding: 2px; }
+.ci-podman    { }
 .ci-remote    { padding: 2px; background: #f9f; }
-.ci-host      { padding: 2px; background: #c0c; color: #fff; }
+.ci-fedora    { padding: 2px; background: #294172; color: #adf; }
+.ci-ubuntu    { padding: 2px; background: #e95420; color: #fff; }
+.ci-root      { }
+.ci-rootless  { padding: 2px; background: #ccc; color: #333; }
+.ci-host      { }
 .ci-container { padding: 2px; background: #9cf; }
 `;
 
@@ -68,6 +68,7 @@ function highlight_int_sys_etc(element) {
 **   element.innerHTML = "This text inserted by waitForKeyElements().";
 ** });
 */
-waitForKeyElements("div.merge-status-item > div.col-10 > strong", highlight_int_sys_etc);
+waitForKeyElements("div.merge-status-item > div.col-10 > strong",
+                   highlight_int_sys_etc, false);
 
 window.addEventListener("load", add_css, false);
