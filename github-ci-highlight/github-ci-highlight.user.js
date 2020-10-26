@@ -5,14 +5,14 @@
 // @description highlight 'sys/int podman/remote fedora/ubuntu root/rootless'
 // @include     /.*/containers/podman/pull/
 // @require     https://cdn.jsdelivr.net/gh/CoeJoder/waitForKeyElements.js@v1.2/waitForKeyElements.js
-// @version     0.001
+// @version     0.01
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
 **
-**  2020-10-26  0.01  initial attempt
+**  2020-10-26  0.01  initial revision
 */
 
 /*
@@ -69,6 +69,8 @@ function highlight_int_sys_etc(element) {
 ** });
 */
 waitForKeyElements("div.merge-status-item > div.col-10 > strong",
+                   highlight_int_sys_etc, false);
+waitForKeyElements("a.SideNav-subItem > span",
                    highlight_int_sys_etc, false);
 
 window.addEventListener("load", add_css, false);
