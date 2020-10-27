@@ -16,6 +16,15 @@ Basically:
 * `host` is unhighlighted (ibid) but `container` gets a color.
 
 The highlights show up in github PR `Conversation` and `Checks` tabs.
+They are especially useful when you have a run of CI failures: the
+colors help patterns stand out, e.g. rootless or remote or ubuntu,
+making it easier for you to know what to focus on.
+
+Also, (in the Conversation tab only), the 'Task summary' string is also
+given its own friendly colors for `Queued`, `In progress`, `Failing`,
+`Cancelled`, and `Successful`. My experience has been that this
+is super helpful for scrolling down the jobs list and finding
+the running jobs; it's also nice for Cancelled ones.
 
 Installing
 ==========
