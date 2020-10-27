@@ -5,13 +5,14 @@
 // @description highlight 'sys/int podman/remote fedora/ubuntu root/rootless'
 // @include     /.*/containers/podman/pull/
 // @require     https://cdn.jsdelivr.net/gh/CoeJoder/waitForKeyElements.js@v1.2/waitForKeyElements.js
-// @version     0.02
+// @version     0.03
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
 **
+**  2020-10-26  0.03  simplify, and highlight *all* instances of fedora/etc
 **  2020-10-26  0.02  remove space between tokens, make color blocks abut.
 **  2020-10-26  0.01  initial revision
 */
@@ -25,16 +26,16 @@ function add_css() {
     var style = document.createElement('style');
     style.type = 'text/css';
     style.innerHTML = `
-.ci-int       { padding: 2px; background: #960; }
-.ci-sys       { padding: 2px; background: #cf9; }
-.ci-podman    { padding: 2px; }
-.ci-remote    { padding: 2px; background: #f9f; }
-.ci-fedora    { padding: 2px; background: #294172; color: #adf; }
-.ci-ubuntu    { padding: 2px; background: #e95420; color: #fff; }
-.ci-root      { padding: 2px; }
-.ci-rootless  { padding: 2px; background: #ccc; color: #333; }
-.ci-host      { padding: 2px; }
-.ci-container { padding: 2px; background: #9cf; }
+.ci-int       { padding: 0px 2px; background: #960; }
+.ci-sys       { padding: 0px 2px; background: #cf9; }
+.ci-podman    { padding: 0px 2px; }
+.ci-remote    { padding: 0px 2px; background: #f9f; }
+.ci-fedora    { padding: 0px 2px; background: #294172; color: #adf; }
+.ci-ubuntu    { padding: 0px 2px; background: #e95420; color: #fff; }
+.ci-root      { padding: 0px 2px; }
+.ci-rootless  { padding: 0px 2px; background: #ccc; color: #333; }
+.ci-host      { padding: 0px 2px; }
+.ci-container { padding: 0px 2px; background: #9cf; }
 `;
 
     head.appendChild(style);
@@ -54,12 +55,13 @@ function add_css() {
 */
 
 function highlight_int_sys_etc(element) {
-    element.innerHTML = element.innerHTML.replace(/(int|sys)\s+(podman|remote)\s+((fedora|ubuntu)-\S+)\s+(root|rootless)\s+(host|container)/, function(match, intsys, client, full_os, os, root, hostcontainer) {
-        var newhtml = "<span class=\"ci-"+intsys+"\">"+intsys+"</span>";
-        newhtml += "<span class=\"ci-"+client+"\">"+client+"</span>";
-        newhtml += "<span class=\"ci-"+os+"\">"+full_os+"</span>";
-        newhtml += "<span class=\"ci-"+root+"\">"+root+"</span>";
-        newhtml += "<span class=\"ci-"+hostcontainer+"\">"+hostcontainer+"</span>";
+    // Each token is unique, except for fedora & ubuntu which include -version
+    element.innerHTML = element.innerHTML.replace(/\b(int|sys|podman|remote|(fedora|ubuntu)-\S+|root|rootless|host|container)\s*\b/g, function(match, token, fu) {
+        var css = fu;              // may be just 'fedora' or 'ubuntu'
+        if (fu == null) {
+            css = token;           // nope, empty, it's int|sys|podman|etc
+        }
+        var newhtml = "<span class=\"ci-"+css+"\">"+token+"</span>";
         return newhtml;
     });
 }
