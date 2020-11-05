@@ -5,13 +5,14 @@
 // @description highlight 'sys/int podman/remote fedora/ubuntu root/rootless'
 // @include     /.*/containers/podman/pull/
 // @require     https://cdn.jsdelivr.net/gh/CoeJoder/waitForKeyElements.js@v1.2/waitForKeyElements.js
-// @version     0.05
+// @version     0.06
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
 **
+**  2020-11-05  0.06  deemphasize the always-failing "rdoproject" test
 **  2020-10-27  0.05  highlight Task Summary (Queued, In Progress, Failing,..)
 **  2020-10-27  0.04  highlight APIv2 and Unit
 **  2020-10-26  0.03  simplify, and highlight *all* instances of fedora/etc
@@ -48,6 +49,8 @@ function add_css() {
 .summary-cancelled  { color: #C00; text-decoration: line-through; }
 .summary-failing    { background: #F00; color: #fff; }
 .summary-pending    { background: #ccc; color: #000; }
+
+.boring             { color: #ccc; }
 `;
 
     head.appendChild(style);
@@ -80,6 +83,11 @@ function highlight_int_sys_etc(element) {
     /* The "Task summary" just to the right of the test name */
     element.innerHTML = element.innerHTML.replace(/((Queued|In progress|Successful|Cancelled|Failing|Pending).*)/, function(match, summaryline, token) {
         return "<span class=\"summary-"+token.replace(/\s/g,'').toLowerCase()+"\">"+summaryline+"</span>";
+    });
+
+    /* This is a worthless CI check that always fails; we don't care */
+    element.innerHTML = element.innerHTML.replace(/(rdoproject\S+)/, function(match, rdo) {
+        return "<span class=\"boring\">" + rdo + "</span>";
     });
 }
 
