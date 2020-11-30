@@ -5,7 +5,8 @@
 // @description highlight different-level messages in podman ginkgo logs
 // @include     /.*/aos-ci/.*/containers/libpod/.*/output.log/
 // @include     /.*cirrus-ci.com/.*task.*/
-// @version     0.16
+// @include     /.*artifacts.dev.desting-farm.io/.*/.*bats.log
+// @version     0.17
 // @grant       none
 // ==/UserScript==
 
