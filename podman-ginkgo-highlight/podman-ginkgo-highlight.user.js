@@ -4,15 +4,18 @@
 // @downloadURL https://raw.githubusercontent.com/edsantiago/greasemonkey/master/podman-ginkgo-highlight/podman-ginkgo-highlight.user.js
 // @description highlight different-level messages in podman ginkgo logs
 // @include     /.*/aos-ci/.*/containers/libpod/.*/output.log/
-// @include      /.*/baseos-ci/.*/test.*\.bats\.log/
+// @include     /.*/baseos-ci/.*/test.*\.bats\.log/
+// @include     /.*/ci-openstack-.*/.*/test.*\.bats\.log/
 // @include     /.*cirrus-ci.com/.*task.*/
 // @include     /.*artifacts.dev.testing-farm.io/.*/.*bats.log/
-// @version     0.18
+// @version     0.19
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
+**
+**  2021-01-13  0.19  trigger on more internal RH CI
 **
 **  2021-01-05  0.18  handle RHEL gating-test URLs
 **
