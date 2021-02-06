@@ -8,12 +8,14 @@
 // @include     /.*/ci-openstack-.*/.*/test.*\.bats\.log/
 // @include     /.*cirrus-ci.com/.*task.*/
 // @include     /.*artifacts.dev.testing-farm.io/.*/.*bats.log/
-// @version     0.19
+// @version     0.20
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
+**
+**  2021-02-06  0.20  highlight buildah conformance tests (just a rough try)
 **
 **  2021-01-13  0.19  trigger on more internal RH CI
 **
@@ -110,6 +112,7 @@ function htmlify() {
     var previous_ts = '';
     var git_commit;
     var looks_like_bats = 0;
+    var looks_like_conformance = 0;
     var bats_count = { total: 0, passed: 0, failed: 0, skipped: 0 };
 
     // There's probably only one <pre> in the document, but allow more
@@ -183,6 +186,48 @@ function htmlify() {
                 }
                 lines_out += line + "\n"
                 continue
+            }
+
+            // 2021-02-06 for buildah conformance tests
+            if (line.match(/=== RUN\s+TestConformance/)) {
+                looks_like_conformance = 1;
+            }
+            if (looks_like_conformance) {
+                if (line.match(/^make:/)) {
+                    // Done with conformance testing report
+                    looks_like_conformance = 0;
+                }
+
+                // RUN line; may be followed by failed test results
+                var css = '';
+                var m = line.match(/^=== RUN\s+(\S+)/);
+                if (m) {
+                    id = m[1].replace('/','-');
+                    line = "<a name=\"t--"+id+"\">" + line + "</a>";
+                }
+
+                // PASS/FAIL at the end
+                m = line.match(/^\s*--- (PASS|FAIL):\s+(\S+\/\S+)/);
+                if (m) {
+                    css = m[1].toLowerCase() + 'ed';
+                    line = line.replace(m[2], "<a href=\"#t--"+m[2].replace('/','-')+"\">"+m[2]+"</a>");
+                }
+
+                // FIXME: lines that otherwise start with spaces are errors
+                else {
+                    if (line.match(/^\s+/)) {
+                        css = 'log';
+                    }
+                }
+
+                if (css != '') {
+                    line = "<span class='bats-"+css+"'>" + line + "</span>";
+                }
+                if (ts) {
+                    lines_out += "<span class=\"timestamp\">" + ts + "</span>";
+                }
+                lines_out += line + "\n";
+                continue;
             }
 
             // WEIRD: sometimes there are UTF-8 binary chars here
