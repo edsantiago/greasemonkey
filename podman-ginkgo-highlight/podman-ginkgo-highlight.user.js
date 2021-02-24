@@ -8,12 +8,15 @@
 // @include     /.*/ci-openstack-.*/.*/test.*\.bats\.log/
 // @include     /.*cirrus-ci.com/.*task.*/
 // @include     /.*artifacts.dev.testing-farm.io/.*/.*bats.log/
-// @version     0.20
+// @include     /.*/beaker-logs/.*/taskout.log/
+// @version     0.21
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
+**
+**  2021-02-24  0.21  trigger on internal RH Beaker
 **
 **  2021-02-06  0.20  highlight buildah conformance tests (just a rough try)
 **
