@@ -9,12 +9,15 @@
 // @include     /.*cirrus-ci.com/.*task.*/
 // @include     /.*artifacts.dev.testing-farm.io/.*/.*bats.log/
 // @include     /.*/beaker-logs/.*/taskout.log/
-// @version     0.21
+// @include     /.*/beaker/logs/.*/taskout.log/
+// @version     0.22
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
+**
+**  2021-04-28  0.22  another internal beaker URL
 **
 **  2021-02-24  0.21  trigger on internal RH Beaker
 **
