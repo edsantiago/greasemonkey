@@ -10,12 +10,16 @@
 // @include     /.*artifacts.dev.testing-farm.io/.*/.*bats.log/
 // @include     /.*/beaker-logs/.*/taskout.log/
 // @include     /.*/beaker/logs/.*/taskout.log/
-// @version     0.22
+// @include     /.*ci-artemis-mbs-sti/.*/artifact/.*\.bats\.log/
+//
+// @version     0.23
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
+**
+**  2021-07-06  0.23  another internal beaker URL
 **
 **  2021-04-28  0.22  another internal beaker URL
 **
