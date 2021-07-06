@@ -10,7 +10,7 @@
 // @include     /.*artifacts.dev.testing-farm.io/.*/.*bats.log/
 // @include     /.*/beaker-logs/.*/taskout.log/
 // @include     /.*/beaker/logs/.*/taskout.log/
-// @include     /.*ci-artemis-mbs-sti/.*/artifact/.*\.bats\.log/
+// @include     /.*/ci-artemis-mbs-sti/.*/artifact/.*\.bats\.log/
 //
 // @version     0.23
 // @grant       none
