@@ -11,13 +11,16 @@
 // @include     /.*/beaker-logs/.*/taskout.log/
 // @include     /.*/beaker/logs/.*/taskout.log/
 // @include     /.*/ci-artemis-mbs-sti/.*/artifact/.*\.bats\.log/
+// @include     /.*softwarefactory-project.io/logs/.*/artifacts/.*podman/
 //
-// @version     0.23
+// @version     0.24
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
+**
+**  2021-09-13  0.24  softwarefactory, used in Fedora CI
 **
 **  2021-07-06  0.23  another internal beaker URL
 **
