@@ -5,13 +5,14 @@
 // @description highlight 'sys/int podman/remote fedora/ubuntu root/rootless'
 // @include     /.*/containers/podman/pull/
 // @require     https://cdn.jsdelivr.net/gh/CoeJoder/waitForKeyElements.js@v1.2/waitForKeyElements.js
-// @version     0.07
+// @version     0.08
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
 **
+**  2021-11-10  0.08  preserve whitespace (in Validate step)
 **  2021-03-24  0.07  highlight new bud, Upgrade tests
 **  2020-11-05  0.06  deemphasize the always-failing "rdoproject" test
 **  2020-10-27  0.05  highlight Task Summary (Queued, In Progress, Failing,..)
@@ -74,12 +75,12 @@ function add_css() {
 
 function highlight_int_sys_etc(element) {
     // Each token is unique, except for fedora & ubuntu which include -version
-    element.innerHTML = element.innerHTML.replace(/\b(bud|int|sys|podman|remote|(fedora|ubuntu)-\S+|root|rootless|host|container|APIv2|Unit|Upgrade)\s*\b/g, function(match, token, fu) {
+    element.innerHTML = element.innerHTML.replace(/\b(bud|int|sys|podman|remote|(fedora|ubuntu)-\S+|root|rootless|host|container|APIv2|Unit|Upgrade)(\s*)\b/g, function(match, token, fu, ws) {
         var css = fu;              // may be just 'fedora' or 'ubuntu'
         if (fu == null) {
             css = token;           // nope, empty, it's int|sys|podman|etc
         }
-        var newhtml = "<span class=\"ci-"+css+"\">"+token+"</span>";
+        var newhtml = "<span class=\"ci-"+css+"\">"+token+"</span>"+ws;
         return newhtml;
     });
 
