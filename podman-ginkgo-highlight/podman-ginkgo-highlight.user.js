@@ -12,13 +12,16 @@
 // @include     /.*/beaker/logs/.*/taskout.log/
 // @include     /.*/ci-artemis-mbs-sti/.*/artifact/.*\.bats\.log/
 // @include     /.*softwarefactory-project.io/logs/.*/artifacts/.*podman/
+// @include     /arr-cki-prod-datawarehouse-public/datawarehouse-public/.*_taskout.log/
 //
-// @version     0.24
+// @version     0.25
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
+**
+**  2022-01-06  0.25  datawarehouse, used in multiarch CI
 **
 **  2021-09-13  0.24  softwarefactory, used in Fedora CI
 **
