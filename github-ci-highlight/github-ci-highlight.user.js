@@ -5,13 +5,17 @@
 // @description highlight 'sys/int podman/remote fedora/ubuntu root/rootless'
 // @include     /.*/containers/podman/pull/
 // @require     https://cdn.jsdelivr.net/gh/CoeJoder/waitForKeyElements.js@v1.2/waitForKeyElements.js
-// @version     0.08
+// @version     0.09
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
 **
+**  2022-01-17  0.09  github changed their html. The 'int podman etc' stuff
+**                    is now inside <strong title="int podman etc">, so we
+**                    have to avoid tweaking that title. And Queued/InProgress
+**                    is now in <span>, but (sigh) Successful is not.
 **  2021-11-10  0.08  preserve whitespace (in Validate step)
 **  2021-03-24  0.07  highlight new bud, Upgrade tests
 **  2020-11-05  0.06  deemphasize the always-failing "rdoproject" test
@@ -95,13 +99,27 @@ function highlight_int_sys_etc(element) {
     });
 }
 
+function highlight_state(element) {
+    /* The "Task summary" just to the right of the test name */
+    element.innerHTML = element.innerHTML.replace(/((Queued|In progress|Successful|Cancelled|Failing|Pending).*)/, function(match, summaryline, token) {
+        return "<span class=\"summary-"+token.replace(/\s/g,'').toLowerCase()+"\">"+summaryline+"</span>";
+    });
+
+    /* This is a worthless CI check that always fails; we don't care */
+    element.innerHTML = element.innerHTML.replace(/(rdoproject\S+)/, function(match, rdo) {
+        return "<span class=\"boring\">" + rdo + "</span>";
+    });
+}
+
 /*
 ** waitForKeyElements("div.comments", (element) => {
 **   element.innerHTML = "This text inserted by waitForKeyElements().";
 ** });
 */
-waitForKeyElements("div.merge-status-item > div.col-10",
+waitForKeyElements("div.merge-status-item > div.col-10 > strong",
                    highlight_int_sys_etc, false);
+waitForKeyElements("div.merge-status-item > div.col-10",
+                   highlight_state, false);
 waitForKeyElements("a.SideNav-subItem > span",
                    highlight_int_sys_etc, false);
 
