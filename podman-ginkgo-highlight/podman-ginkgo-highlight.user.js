@@ -13,13 +13,16 @@
 // @include     /.*/ci-artemis-mbs-sti/.*/artifact/.*\.bats\.log/
 // @include     /.*softwarefactory-project.io/logs/.*/artifacts/.*podman/
 // @include     /arr-cki-prod-datawarehouse-public/datawarehouse-public/.*taskout.log/
+// @include     /artifacts.osci.redhat.com/testing-farm/.*.log/
 //
-// @version     0.26
+// @version     0.27
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
+**
+**  2022-01-19  0.27  add artifacts.osci.redhat.com
 **
 **  2022-01-10  0.26  minor one-character tweak to multiarch
 **  2022-01-06  0.25  datawarehouse, used in multiarch CI
