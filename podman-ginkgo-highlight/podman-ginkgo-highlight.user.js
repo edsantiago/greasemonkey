@@ -14,13 +14,16 @@
 // @include     /.*softwarefactory-project.io/logs/.*/artifacts/.*podman/
 // @include     /arr-cki-prod-datawarehouse-public/datawarehouse-public/.*taskout.log/
 // @include     /artifacts.osci.redhat.com/testing-farm/.*.log/
+// @include     /osci-jenkins-1.ci.fedoraproject.org/job/fedora-ci/job/dist-git-pipeline/
 //
-// @version     0.27
+// @version     0.28
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
+**
+**  2022-02-28  0.28  add buildah bodhi
 **
 **  2022-01-19  0.27  add artifacts.osci.redhat.com
 **
