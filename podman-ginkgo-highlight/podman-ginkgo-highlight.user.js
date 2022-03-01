@@ -16,12 +16,15 @@
 // @include     /artifacts.osci.redhat.com/testing-farm/.*.log/
 // @include     /osci-jenkins-1.ci.fedoraproject.org/job/fedora-ci/job/dist-git-pipeline/
 //
-// @version     0.28
+// @version     0.29
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
+**
+**  2022-03-01  0.29  highlight "time= level=error msg=...." lines. Change
+**                    decoration of FAIL blocks so they don't look the same.
 **
 **  2022-02-28  0.28  add buildah bodhi
 **
@@ -105,8 +108,8 @@ function add_css() {
 .bats-passed    { color: #393; }
 .bats-failed    { color: #F00; font-weight: bold; }
 .bats-skipped   { color: #F90; }
-.bats-log       { color: #900; }
-.bats-log-esm   { color: #b00; font-weight: bold; }
+.bats-log       { color: #933; }
+.bats-log-failblock   { color: #b00; background: #fee; }
 
 .bats-summary   { font-size: 150%; }
 
@@ -191,13 +194,16 @@ function htmlify() {
                 if      (line.match(/^ok .* # skip/)) { css = 'skipped' }
                 else if (line.match(/^ok /))          { css = 'passed'  }
                 else if (line.match(/^not ok /))      { css = 'failed'  }
-                else if (line.match(/^# #\| /))       { css = 'log-esm' }
+                else if (line.match(/^# #(\/v|\| |\\\^)/)) { css = 'log-failblock' }
                 else if (line.match(/^# /))           { css = "log"     }
 
                 // Two hashes, or hash-and-dollar, indicate a command.
                 // Strip off the full path for readability; and make entire
                 // line boldface to make it easier to find commands.
                 line = line.replace(/^#\s(#|\$)\s(\/\S+\/(\S+))(.*)/, "# $1 <b><span title=\"$2\">$3</span>$4</b>");
+
+                // diagnostic messages from podman
+                line = line.replace(/ level=(debug|info|warn|error)(\S*)\s+msg=(.*)/, " level=<span class=\"log-$1\">$1$2</span> msg=<span class=\"log-$1\">$3</span>");
 
                 if (css != '') {
                     bats_count[css]++
