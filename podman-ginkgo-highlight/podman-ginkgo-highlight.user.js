@@ -16,13 +16,14 @@
 // @include     /artifacts.osci.redhat.com/testing-farm/.*.log/
 // @include     /osci-jenkins-1.ci.fedoraproject.org/job/fedora-ci/job/dist-git-pipeline/
 //
-// @version     0.29
+// @version     0.30
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
 **
+**  2022-03-03  0.30  add 'fatal' to list of errors from 0.29
 **  2022-03-01  0.29  highlight "time= level=error msg=...." lines. Change
 **                    decoration of FAIL blocks so they don't look the same.
 **
@@ -98,6 +99,7 @@ function add_css() {
 .log-info  { color: #333; }
 .log-warn  { color: #f60; }
 .log-error { color: #900; font-weight: bold; }
+.log-fatal { color: #E00; font-weight: bold; }
 .subtest   { background: #eee; }
 .subsubtest { color: #F39; font-weight: bold; }
 .string    { color: #00c; }
@@ -203,7 +205,7 @@ function htmlify() {
                 line = line.replace(/^#\s(#|\$)\s(\/\S+\/(\S+))(.*)/, "# $1 <b><span title=\"$2\">$3</span>$4</b>");
 
                 // diagnostic messages from podman
-                line = line.replace(/ level=(debug|info|warn|error)(\S*)\s+msg=(.*)/, " level=<span class=\"log-$1\">$1$2</span> msg=<span class=\"log-$1\">$3</span>");
+                line = line.replace(/ level=(debug|info|warn|error|fatal)(\S*)\s+msg=(.*)/, " level=<span class=\"log-$1\">$1$2</span> msg=<span class=\"log-$1\">$3</span>");
 
                 if (css != '') {
                     bats_count[css]++
