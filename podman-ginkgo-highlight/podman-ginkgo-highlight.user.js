@@ -4,6 +4,7 @@
 // @downloadURL https://raw.githubusercontent.com/edsantiago/greasemonkey/master/podman-ginkgo-highlight/podman-ginkgo-highlight.user.js
 // @description highlight different-level messages in podman ginkgo logs
 // @include     /.*/aos-ci/.*/containers/libpod/.*/output.log/
+// @include     /.*/aos-ci/.*/containers/podman/.*/output.log/
 // @include     /.*/baseos-ci/.*/test.*\.bats\.log/
 // @include     /.*/ci-openstack-.*/.*/test.*\.bats\.log/
 // @include     /.*cirrus-ci.com/.*task.*/
@@ -170,14 +171,14 @@ function htmlify() {
             }
 
             // Identify the git commit we're working with
-            var git_commit_match = line.match(/libpod(\/define)?.gitCommit=([0-9a-f]+)/);
+            var git_commit_match = line.match(/(libpod|podman)(\/define)?.gitCommit=([0-9a-f]+)/);
             if (git_commit_match) {
-                git_commit = git_commit_match[2];
+                git_commit = git_commit_match[3];
             }
             // ...so we can link to particular lines in source files
             if (git_commit) {
-                //                    1  12  3                  34     4 5   526  6
-                line = line.replace(/^(.*)(\/(containers\/libpod)(\/\S+):(\d+))(.*)$/,
+                //                    1  12  3                 34     4 5   526  6
+                line = line.replace(/^(.*)(\/(containers\/[^/]+)(\/\S+):(\d+))(.*)$/,
                                     "$1<a class=\"codelink\" href='https://github.com/$3/blob/" +
                                     git_commit + "$4#L$5'>$2</a>$6");
             }
