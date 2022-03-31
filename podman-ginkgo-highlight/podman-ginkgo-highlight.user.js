@@ -280,7 +280,7 @@ function htmlify() {
                 // "--remote" takes no args; just remove it entirely
                 line = line.replace(/\s+--remote\s+/g, ' ');
                 // Highlight the important (non-boilerplate) podman command
-                line = line.replace(/(\S+\/podman(-remote)?)((\s+--(root|runroot|runtime|tmpdir|storage-opt|conmon|cgroup-manager|cni-config-dir|storage-driver|events-backend|url) \S+)*)(.*)/, function(match, commandpath, remote, options, foo1, foo2, rest) {
+                line = line.replace(/(\S+\/podman(-remote)?)((\s+--(root|runroot|runtime|tmpdir|storage-opt|conmon|cgroup-manager|cni-config-dir|log-level|storage-driver|syslog|events-backend|network-backend|network-config-dir|url)[ =]\S+)*)(.*)/, function(match, commandpath, remote, options, foo1, foo2, rest) {
                     var newline = "<span title=\"" + commandpath + "\"><b>podman";
                     if (remote) {
                         newline += remote;
