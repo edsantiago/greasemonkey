@@ -17,13 +17,16 @@
 // @include     /artifacts.osci.redhat.com/testing-farm/.*.log/
 // @include     /osci-jenkins-1.ci.fedoraproject.org/job/fedora-ci/job/dist-git-pipeline/
 //
-// @version     0.30
+// @version     0.31
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
 **
+**  2022-03-31  0.31  recognize more podman options (e.g. netavark), and
+**                    allow '--foo=bar' as well as '--foo bar'. And, ghost out
+**                    debug messages in e2e tests.
 **  2022-03-03  0.30  add 'fatal' to list of errors from 0.29
 **  2022-03-01  0.29  highlight "time= level=error msg=...." lines. Change
 **                    decoration of FAIL blocks so they don't look the same.
@@ -183,6 +186,9 @@ function htmlify() {
                                     git_commit + "$4#L$5'>$2</a>$6");
             }
 
+            // diagnostic messages from podman
+            line = line.replace(/ level=(debug|info|warn|error|fatal)(\S*)\s+msg=(.*)/, " level=<span class=\"log-$1\">$1$2</span> msg=<span class=\"log-$1\">$3</span>");
+
             // BATS handling (used also for apiv2 tests, which emit TAP output)
             var bats_found = line.match(/^1\.\.(\d+)$/);
             if (bats_found || line.match(/\/test-apiv2/)) {
@@ -204,9 +210,6 @@ function htmlify() {
                 // Strip off the full path for readability; and make entire
                 // line boldface to make it easier to find commands.
                 line = line.replace(/^#\s(#|\$)\s(\/\S+\/(\S+))(.*)/, "# $1 <b><span title=\"$2\">$3</span>$4</b>");
-
-                // diagnostic messages from podman
-                line = line.replace(/ level=(debug|info|warn|error|fatal)(\S*)\s+msg=(.*)/, " level=<span class=\"log-$1\">$1$2</span> msg=<span class=\"log-$1\">$3</span>");
 
                 if (css != '') {
                     bats_count[css]++
