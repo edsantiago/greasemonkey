@@ -6,13 +6,14 @@
 // @include     /.*/containers/podman/pull/
 // @include     /cirrus-ci.com/build/
 // @require     https://cdn.jsdelivr.net/gh/CoeJoder/waitForKeyElements.js@v1.2/waitForKeyElements.js
-// @version     0.11
+// @version     0.12
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
 **
+**  2022-06-16  0.12  vivify links to annotated log
 **  2022-06-16  0.11  run on cirrus-ci.com/build/BUILD-ID
 **  2022-06-16  0.10  colorize "podman" (purple) and "compose test"
 **  2022-01-17  0.09  github changed their html. The 'int podman etc' stuff
@@ -121,6 +122,17 @@ function highlight_state(element) {
 }
 
 /*
+** Makes the "Annotated results" URL clickable
+*/
+function vivify_log_links(element) {
+    element.innerHTML = element.innerHTML.replace(/ (https:\S+\.log\.html)/,
+                                                  function(match, url) {
+                                                      return " <a href=\"" + url + "\" target=\"_blank\">" + url + "</a>";
+                                                  });
+}
+
+
+/*
 ** waitForKeyElements("div.comments", (element) => {
 **   element.innerHTML = "This text inserted by waitForKeyElements().";
 ** });
@@ -135,5 +147,9 @@ waitForKeyElements("a.SideNav-subItem > span",
 // https://cirrus-ci.com/build/NNNNN (long vertical list of all tasks)
 waitForKeyElements("span.MuiChip-label",
                    highlight_int_sys_etc, false);
+
+// vivify links to annotated log; triggers on github CI-summary page
+waitForKeyElements("pre > span.pl-c1",
+                   vivify_log_links, false);
 
 window.addEventListener("load", add_css, false);
