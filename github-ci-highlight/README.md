@@ -9,18 +9,20 @@ so we highlight each category using a different color:
 ![sample image](github-ci-highlight.png)
 
 Basically:
-* `int` and `sys` (integration/system) get different colors
-* `podman` is unhighlighted because it's the usual, but `remote` is highlighted.
+* `int` and `sys` (integration/system) get different colors. So do `bud`, `APIv2`, `compose`, `Unit`, and `Upgrade`.
+* `podman` is in logo-purple, `remote` is visually distinct.
 * `fedora` and `ubuntu` get their own colors
-* `root` is unhighlighted (again, because it's the usual case) but `rootless` is highlighted
+* `root` is unhighlighted (because it's the usual case) but `rootless` is highlighted
 * `host` is unhighlighted (ibid) but `container` gets a color.
 
 The highlights show up in github PR `Conversation` and `Checks` tabs.
 They are especially useful when you have a run of CI failures: the
 colors help patterns stand out, e.g. rootless or remote or ubuntu,
-making it easier for you to know what to focus on.
+making it easier for you to know what to focus on. As of 2022-06-16
+the highlights also show up in `cirrus-ci.com/build/BUILD-ID` (the
+page with the long vertical list of jobs).
 
-Also, (in the Conversation tab only), the 'Task summary' string is also
+Also, (in the Conversation tab only), the 'Task summary' string is
 given its own friendly colors for `Queued`, `In progress`, `Failing`,
 `Cancelled`, and `Successful`. My experience has been that this
 is super helpful for scrolling down the jobs list and finding
