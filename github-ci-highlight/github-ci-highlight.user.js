@@ -5,13 +5,14 @@
 // @description highlight 'sys/int podman/remote fedora/ubuntu root/rootless'
 // @include     /.*/containers/podman/pull/
 // @require     https://cdn.jsdelivr.net/gh/CoeJoder/waitForKeyElements.js@v1.2/waitForKeyElements.js
-// @version     0.09
+// @version     0.10
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
 **
+**  2022-06-16  0.10  colorize "podman" (purple) and "compose test"
 **  2022-01-17  0.09  github changed their html. The 'int podman etc' stuff
 **                    is now inside <strong title="int podman etc">, so we
 **                    have to avoid tweaking that title. And Queued/InProgress
@@ -36,9 +37,10 @@ function add_css() {
     style.type = 'text/css';
     style.innerHTML = `
 .ci-bud       { padding: 0px 2px; background: #fc0; color: #000; }
+.ci-compose   { padding: 0px 2px; color: #660; }
 .ci-int       { padding: 0px 2px; background: #960; }
 .ci-sys       { padding: 0px 2px; background: #cf9; }
-.ci-podman    { padding: 0px 2px; }
+.ci-podman    { padding: 0px 2px; color: #892ca0; }
 .ci-remote    { padding: 0px 2px; background: #f9f; }
 .ci-fedora    { padding: 0px 2px; background: #294172; color: #adf; }
 .ci-ubuntu    { padding: 0px 2px; background: #e95420; color: #fff; }
@@ -86,6 +88,11 @@ function highlight_int_sys_etc(element) {
         }
         var newhtml = "<span class=\"ci-"+css+"\">"+token+"</span>"+ws;
         return newhtml;
+    });
+
+    // Special case for "compose test" / "compose_v2 test"
+    element.innerHTML = element.innerHTML.replace(/\b(compose\S* test)/, function(match, compose) {
+        return "<span class=\"ci-compose\">" + compose + "</span>";
     });
 
     /* The "Task summary" just to the right of the test name */
