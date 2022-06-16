@@ -4,14 +4,16 @@
 // @downloadURL https://raw.githubusercontent.com/edsantiago/greasemonkey/master/github-ci-highlight/github-ci-highlight.user.js
 // @description highlight 'sys/int podman/remote fedora/ubuntu root/rootless'
 // @include     /.*/containers/podman/pull/
+// @include     /cirrus-ci.com/build/
 // @require     https://cdn.jsdelivr.net/gh/CoeJoder/waitForKeyElements.js@v1.2/waitForKeyElements.js
-// @version     0.10
+// @version     0.11
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
 **
+**  2022-06-16  0.11  run on cirrus-ci.com/build/BUILD-ID
 **  2022-06-16  0.10  colorize "podman" (purple) and "compose test"
 **  2022-01-17  0.09  github changed their html. The 'int podman etc' stuff
 **                    is now inside <strong title="int podman etc">, so we
@@ -128,6 +130,10 @@ waitForKeyElements("div.merge-status-item > div.col-10 > strong",
 waitForKeyElements("div.merge-status-item > div.col-10",
                    highlight_state, false);
 waitForKeyElements("a.SideNav-subItem > span",
+                   highlight_int_sys_etc, false);
+
+// https://cirrus-ci.com/build/NNNNN (long vertical list of all tasks)
+waitForKeyElements("span.MuiChip-label",
                    highlight_int_sys_etc, false);
 
 window.addEventListener("load", add_css, false);
