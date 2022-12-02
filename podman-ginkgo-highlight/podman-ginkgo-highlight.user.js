@@ -9,20 +9,22 @@
 // @include     /.*/ci-openstack-.*/.*/test.*\.bats\.log/
 // @include     /.*cirrus-ci.com/.*task.*/
 // @include     /.*artifacts.dev.testing-farm.io/.*/.*bats.log/
-// @include     /.*/beaker-logs/.*/taskout.log/
-// @include     /.*/beaker/logs/.*/taskout.log/
+// @include     /.*/beaker-logs/.*/.*\.log/
+// @include     /.*/beaker/logs/.*/.*\.log/
 // @include     /.*/ci-artemis-mbs-sti/.*/artifact/.*\.bats\.log/
 // @include     /.*softwarefactory-project.io/logs/.*/artifacts/.*podman/
 // @include     /arr-cki-prod-datawarehouse-public/datawarehouse-public/.*taskout.log/
 // @include     /artifacts.osci.redhat.com/testing-farm/.*.log/
 // @include     /osci-jenkins-1.ci.fedoraproject.org/job/fedora-ci/job/dist-git-pipeline/
 //
-// @version     0.31
+// @version     0.32
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
+**
+**  2022-12-02  0.32  beaker-logs: handle *.log, not just taskout.log
 **
 **  2022-03-31  0.31  recognize more podman options (e.g. netavark), and
 **                    allow '--foo=bar' as well as '--foo bar'. And, ghost out
