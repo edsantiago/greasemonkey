@@ -1,3 +1,5 @@
+Note: *this handles BATS, too*. Sorry for the misleading name.
+
 Installing
 ==========
 
