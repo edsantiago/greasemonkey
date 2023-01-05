@@ -17,12 +17,14 @@
 // @include     /artifacts.osci.redhat.com/testing-farm/.*.log/
 // @include     /osci-jenkins-1.ci.fedoraproject.org/job/fedora-ci/job/dist-git-pipeline/
 //
-// @version     0.32
+// @version     0.33
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
+**
+**  2023-01-05  0.33  better formatting for failblock
 **
 **  2022-12-02  0.32  beaker-logs: handle *.log, not just taskout.log
 **
@@ -117,7 +119,7 @@ function add_css() {
 .bats-failed    { color: #F00; font-weight: bold; }
 .bats-skipped   { color: #F90; }
 .bats-log       { color: #933; }
-.bats-log-failblock   { color: #b00; background: #fee; }
+.bats-log-failblock  { color: #b00; background-color: #fee; display: inline-flex; margin: 0 -500%; padding: 0 500% !important; }
 
 .bats-summary   { font-size: 150%; }
 
