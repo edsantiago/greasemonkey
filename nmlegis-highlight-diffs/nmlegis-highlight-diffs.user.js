@@ -15,6 +15,11 @@
 */
 var allSpans, thisSpan;
 
+/*
+** Unfortunately, nmlegis does not use CSS classes like "removed"/"added".
+** They hardcode line-through and underline.
+*/
+
 // line-through = deleted text
 allSpans = document.evaluate(
     '//span[contains(@style,"line-through")]',
