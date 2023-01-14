@@ -41,6 +41,6 @@ allSpans = document.evaluate(
     null);
 for (var i = 0; i < allSpans.snapshotLength; i++) {
     thisSpan = allSpans.snapshotItem(i);
-    thisSpan.style["background"] = "#930";
+    thisSpan.style["color"] = "#930";
     thisSpan.style["font-weight"] = "bold";
 }
