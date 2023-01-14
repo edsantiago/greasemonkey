@@ -71,5 +71,5 @@ for (var i = 0; i < allSpans.snapshotLength; i++) {
     thisSpan = allSpans.snapshotItem(i);
     console.log(thisSpan);
     thisSpan.innerHTML = thisSpan.innerHTML.replace(/(\d+)-(\d+)-(\d+)/,
-                                                    " <a href=\"https://law.justia.com/codes/new-mexico/2016/chapter-$1/article-$2/section-$1-$2-$3\" target=\"_blank\">$1-$2-$3 NMSA</a>");
+                                                    " <a href=\"https://law.justia.com/codes/new-mexico/2021/chapter-$1/article-$2/section-$1-$2-$3\" target=\"_blank\">$1-$2-$3 NMSA</a>");
 }
