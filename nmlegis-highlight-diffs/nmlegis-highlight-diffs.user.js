@@ -3,14 +3,15 @@
 // @namespace    https://github.com/edsantiago/greasemonkey/nmlegis-highlight-diffs
 // @downloadURL  https://raw.githubusercontent.com/edsantiago/greasemonkey/master/nmlegis-highlight-diffs/nmlegis-highlight-diffs.user.js
 // @description  highlight diffs in nmlegis.gov bills
-// @include      /https:\/\/nmlegis\.gov\/.*\/(bills|memorials|resolutions)\/.*\.html/
-// @version      1.4
+// @include      /https:\/\/.*nmlegis\.gov\/.*\/(bills|memorials|resolutions)\/.*\.html/
+// @version      1.5
 // @grant        none
 // ==/UserScript==
 
 /*
 ** Changelog
 **
+**  2023-01-15  1.5  handle www.nmlegis.gov
 **  2023-01-15  1.4  Duh, handle resolutions too
 **  2023-01-15  1.3  Handle subsections (a-b-c.d) and "Chapter X, Article Y"
 **  2023-01-14  1.2  Linkify sections of NM code
