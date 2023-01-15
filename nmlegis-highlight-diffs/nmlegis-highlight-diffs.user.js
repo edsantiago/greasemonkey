@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         nmlegis-highlight-diffs
-// @namespace    https://github.com/edsantiago/greasemonkey
+// @namespace    https://github.com/edsantiago/greasemonkey/nmlegis-highlight-diffs
 // @downloadURL  https://raw.githubusercontent.com/edsantiago/greasemonkey/master/nmlegis-highlight-diffs/nmlegis-highlight-diffs.user.js
 // @description  highlight diffs in nmlegis.gov bills
 // @include      https://nmlegis.gov/*/bills/*.html
