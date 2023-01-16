@@ -6,13 +6,14 @@
 // @include     /.*/containers/podman/pull/
 // @include     /cirrus-ci.com/build/
 // @require     https://cdn.jsdelivr.net/gh/CoeJoder/waitForKeyElements.js@v1.2/waitForKeyElements.js
-// @version     0.12
+// @version     0.13
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
 **
+**  2023-01-16  0.13  try to link to annotated log from github Checks page
 **  2022-06-16  0.12  vivify links to annotated log
 **  2022-06-16  0.11  run on cirrus-ci.com/build/BUILD-ID
 **  2022-06-16  0.10  colorize "podman" (purple) and "compose test"
@@ -153,3 +154,41 @@ waitForKeyElements("pre > span.pl-c1",
                    vivify_log_links, false);
 
 window.addEventListener("load", add_css, false);
+
+/*
+** Try to link to annotated log from a github Check page
+*/
+// Step 1: Look for "Cirrus CI / sys remote etc etc", -> "sys-remote-etc-etc"
+var cirrus_test_name = document.evaluate(
+    '//span[contains(text(), "Cirrus CI / ")]',
+    document,
+    null,
+    XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE,
+    null);
+var test_name;
+for (var i = 0; i < cirrus_test_name.snapshotLength; i++) {
+    var t = cirrus_test_name.snapshotItem(i);
+    test_name = t.innerHTML.replace(/Cirrus CI \/ /, "").replace(/ /g, '-');
+}
+
+// Step 2: Look for the "View more details" link, append a link to HTML log
+var view_more = document.evaluate(
+    '//a[contains(., "View more details on Cirrus CI")]',
+    document,
+    null,
+    XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE,
+    null);
+for (var i = 0; i < view_more.snapshotLength; i++) {
+    var found_view_more = view_more.snapshotItem(i);
+
+    var taskid = found_view_more.href.match(/\/task\/(\d+)/);
+    if (taskid) {
+        var link = "https://api.cirrus-ci.com/v1/artifact/task/" + taskid[1] + "/html/" + test_name + ".log.html";
+
+        var newlink = document.createElement('a');
+        newlink.innerHTML = " (View annotated log)";
+        newlink.target = "_blank";
+        newlink.href = link;
+        found_view_more.parentNode.insertBefore(newlink, found_view_more.nextSibling);
+    }
+}
