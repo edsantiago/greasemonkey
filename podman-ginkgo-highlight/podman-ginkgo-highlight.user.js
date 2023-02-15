@@ -8,7 +8,7 @@
 // @include     /.*/baseos-ci/.*/test.*\.bats\.log/
 // @include     /.*/ci-openstack-.*/.*/test.*\.bats\.log/
 // @include     /.*cirrus-ci.com/.*task.*/
-// @include     /.*artifacts.dev.testing-farm.io/.*/.*bats.log/
+// @include     /.*artifacts.dev.testing-farm.io/.*/.*(str.*test|bats).log/
 // @include     /.*/beaker-logs/.*/.*\.log/
 // @include     /.*/beaker/logs/.*/.*\.log/
 // @include     /.*/ci-artemis-mbs-sti/.*/artifact/.*\.bats\.log/
@@ -17,12 +17,14 @@
 // @include     /artifacts.osci.redhat.com/testing-farm/.*.log/
 // @include     /osci-jenkins-1.ci.fedoraproject.org/job/fedora-ci/job/dist-git-pipeline/
 //
-// @version     0.33
+// @version     0.34
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
+**
+**  2023-02-15  0.34  expand the testing-farm.io regex
 **
 **  2023-01-05  0.33  better formatting for failblock
 **
