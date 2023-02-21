@@ -6,13 +6,14 @@
 // @include     /.*/containers/podman/pull/
 // @include     /cirrus-ci.com/build/
 // @require     https://cdn.jsdelivr.net/gh/CoeJoder/waitForKeyElements.js@v1.2/waitForKeyElements.js
-// @version     0.13
+// @version     0.14
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
 **
+**  2023-02-21  0.14  add debian
 **  2023-01-16  0.13  try to link to annotated log from github Checks page
 **  2022-06-16  0.12  vivify links to annotated log
 **  2022-06-16  0.11  run on cirrus-ci.com/build/BUILD-ID
@@ -47,6 +48,7 @@ function add_css() {
 .ci-podman    { padding: 0px 2px; color: #892ca0; }
 .ci-remote    { padding: 0px 2px; background: #f9f; }
 .ci-fedora    { padding: 0px 2px; background: #294172; color: #adf; }
+.ci-debian    { padding: 0px 2px; background: #a80030; color: #fff; }
 .ci-ubuntu    { padding: 0px 2px; background: #e95420; color: #fff; }
 .ci-root      { padding: 0px 2px; }
 .ci-rootless  { padding: 0px 2px; background: #ccc; color: #333; }
@@ -84,9 +86,9 @@ function add_css() {
 */
 
 function highlight_int_sys_etc(element) {
-    // Each token is unique, except for fedora & ubuntu which include -version
-    element.innerHTML = element.innerHTML.replace(/\b(bud|int|sys|podman|remote|(fedora|ubuntu)-\S+|root|rootless|host|container|APIv2|Unit|Upgrade)(\s*)\b/g, function(match, token, fu, ws) {
-        var css = fu;              // may be just 'fedora' or 'ubuntu'
+    // Each token is unique, except for fedora & debian which include -version
+    element.innerHTML = element.innerHTML.replace(/\b(bud|int|sys|podman|remote|(fedora|debian|ubuntu)-\S+|root|rootless|host|container|APIv2|Unit|Upgrade)(\s*)\b/g, function(match, token, fu, ws) {
+        var css = fu;              // may be just 'fedora' or 'debian'
         if (fu == null) {
             css = token;           // nope, empty, it's int|sys|podman|etc
         }
