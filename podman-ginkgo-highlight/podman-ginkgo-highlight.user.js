@@ -14,15 +14,19 @@
 // @include     /.*/ci-artemis-mbs-sti/.*/artifact/.*\.bats\.log/
 // @include     /.*softwarefactory-project.io/logs/.*/artifacts/.*podman/
 // @include     /arr-cki-prod-datawarehouse-public/datawarehouse-public/.*taskout.log/
+// @include     /.*datawarehouse.*results.*log/
+// @include     /.*upshift\.redhat\.com/.*artifacts.*\.log/
 // @include     /artifacts.osci.redhat.com/testing-farm/.*.log/
 // @include     /osci-jenkins-1.ci.fedoraproject.org/job/fedora-ci/job/dist-git-pipeline/
 //
-// @version     0.34
+// @version     0.35
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
+**
+**  2023-09-18  0.35  more domains to handle (CKI)
 **
 **  2023-02-15  0.34  expand the testing-farm.io regex
 **
