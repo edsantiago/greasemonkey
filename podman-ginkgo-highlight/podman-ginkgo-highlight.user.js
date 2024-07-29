@@ -19,12 +19,14 @@
 // @include     /artifacts.osci.redhat.com/testing-farm/.*.log/
 // @include     /osci-jenkins-1.ci.fedoraproject.org/job/fedora-ci/job/dist-git-pipeline/
 //
-// @version     0.35
+// @version     0.36
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
+**
+**  2024-07-29  0.36  skip processing if page is already formatted
 **
 **  2023-09-18  0.35  more domains to handle (CKI)
 **
@@ -146,6 +148,11 @@ h2 { display: inline; }
 ** Find all <pre> sections in document, then highlight line by line.
 */
 function htmlify() {
+    // Do not process already-formatted pages
+    if (document.querySelector(".synopsis")) {
+      return;
+    }
+
     add_css();
 
     var in_failure = 0;
