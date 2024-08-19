@@ -18,13 +18,16 @@
 // @include     /.*upshift\.redhat\.com/.*artifacts.*\.log/
 // @include     /artifacts.osci.redhat.com/testing-farm/.*.log/
 // @include     /osci-jenkins-1.ci.fedoraproject.org/job/fedora-ci/job/dist-git-pipeline/
+// @include     /openqa.fedoraproject.org/tests/.*/podman-podman-bats.txt/
 //
-// @version     0.36
+// @version     0.37
 // @grant       none
 // ==/UserScript==
 
 /*
 ** Changelog:
+**
+**  2024-08-19  0.37  run on OpenQA
 **
 **  2024-07-29  0.36  skip processing if page is already formatted
 **
